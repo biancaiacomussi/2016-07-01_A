@@ -28,6 +28,15 @@ public class Driver {
 		this.url = url;
 	}
 
+	
+	public Driver(int driverId, String forename, String surname) {
+		super();
+		this.driverId = driverId;
+		this.forename = forename;
+		this.surname = surname;
+	}
+
+
 	public int getDriverId() {
 		return driverId;
 	}

@@ -7,9 +7,12 @@ import java.sql.SQLException;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import it.polito.tdp.formulaone.model.Adiacenza;
 import it.polito.tdp.formulaone.model.Circuit;
 import it.polito.tdp.formulaone.model.Constructor;
+import it.polito.tdp.formulaone.model.Driver;
 import it.polito.tdp.formulaone.model.Season;
 
 
@@ -33,6 +36,34 @@ public class FormulaOneDAO {
 			
 			conn.close();
 			return list ;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("SQL Query Error");
+		}
+	}
+	
+public void getAllDrivers(Map<Integer, Driver> mapDriver) {
+		
+		String sql = "SELECT driverId, driverRef, number, code, forename, surname, dob, nationality, url FROM drivers" ;
+		
+		try {
+			Connection conn = ConnectDB.getConnection() ;
+
+			PreparedStatement st = conn.prepareStatement(sql) ;
+			
+			ResultSet rs = st.executeQuery() ;
+			
+			
+			while(rs.next()) {
+				if(mapDriver.get(rs.getInt("driverId"))==null) {
+					Driver d = new Driver(rs.getInt("driverId"), rs.getString("forename"), rs.getString("surname"));
+					//Driver d = new Driver(rs.getInt("driverId"), rs.getString("driverRef"), rs.getInt("number"), rs.getString("code"), rs.getString("forename"), rs.getString("surname"), rs.getDate("dob").toLocalDate(), rs.getString("nationality"), rs.getString("url"));
+				mapDriver.put(d.getDriverId(), d);
+				}
+			}
+			
+			conn.close();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("SQL Query Error");
@@ -112,4 +143,32 @@ public class FormulaOneDAO {
 		}
 	}
 	
+public List<Adiacenza> getAdiacenze(int stagione, Map<Integer, Driver> mapDrivers) {
+		
+		String sql = "SELECT res.driverId d1, res2.driverId d2, COUNT(*) c " + 
+				"FROM seasons s, races r, results res, results res2 " + 
+				"WHERE s.YEAR = r.YEAR AND res.statusId LIKE '1' AND s.YEAR LIKE ? " + 
+				"AND r.raceId = res.raceId AND r.raceId=res2.raceId AND res.POSITION > res2.POSITION " + 
+				"GROUP BY res.driverId, res2.driverId" ;
+		
+		try {
+			Connection conn = ConnectDB.getConnection() ;
+
+			PreparedStatement st = conn.prepareStatement(sql) ;
+			st.setInt(1, stagione);
+			ResultSet rs = st.executeQuery() ;
+			
+			List<Adiacenza> list = new ArrayList<>() ;
+			while(rs.next()) {
+				list.add(new Adiacenza(mapDrivers.get(rs.getInt("d1")), mapDrivers.get(rs.getInt("d2")), rs.getInt("c"))) ;
+			}
+			
+			conn.close();
+			return list ;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null ;
+		}
+	}
 }

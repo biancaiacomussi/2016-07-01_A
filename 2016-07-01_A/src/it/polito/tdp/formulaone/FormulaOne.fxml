@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.tdp.formulaone.FormulaOneController">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.tdp.formulaone.FormulaOneController">
    <top>
       <Label text="Formula 1 (Esame 01/07/2016 _Tema_A)" BorderPane.alignment="CENTER" />
    </top>
@@ -56,7 +56,7 @@
                   </Button>
                </children>
             </HBox>
-            <TextArea fx:id="txtResult" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+            <TextArea fx:id="txtResult" editable="false" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
