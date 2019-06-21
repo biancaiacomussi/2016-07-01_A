@@ -147,7 +147,7 @@ public List<Adiacenza> getAdiacenze(int stagione, Map<Integer, Driver> mapDriver
 		
 		String sql = "SELECT res.driverId d1, res2.driverId d2, COUNT(*) c " + 
 				"FROM seasons s, races r, results res, results res2 " + 
-				"WHERE s.YEAR = r.YEAR AND res.statusId LIKE '1' AND s.YEAR LIKE ? " + 
+				"WHERE s.YEAR = r.YEAR AND res2.position is not null AND res.position is not null AND s.YEAR LIKE ? " + 
 				"AND r.raceId = res.raceId AND r.raceId=res2.raceId AND res.POSITION > res2.POSITION " + 
 				"GROUP BY res.driverId, res2.driverId" ;
 		
